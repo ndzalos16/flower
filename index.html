@@ -1,731 +1,135 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>justunwrap - Flower Shop</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            scroll-behavior: smooth;
-        }
-        h1, h2, h3 {
-            font-family: 'Playfair Display', serif;
-        }
-        /* Custom styles for animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fadeIn {
-            animation: fadeIn 1s ease-out forwards;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Site Paused — Under Construction</title>
+  <style>
+    :root{
+      --bg:#0f1724; /* dark navy */
+      --card:#0b1220;
+      --accent:#ffb86b; /* warm orange */
+      --muted:#9aa4b2;
+      --glass: rgba(255,255,255,0.04);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: radial-gradient(1200px 600px at 10% 20%, rgba(255,184,107,0.06), transparent),
+                  radial-gradient(900px 400px at 90% 80%, rgba(99,102,241,0.05), transparent),
+                  var(--bg);
+      color:#e6eef6;
+      -webkit-font-smoothing:antialiased;
+      display:flex;align-items:center;justify-content:center;padding:32px;
+    }
+    .card{
+      width:100%;max-width:920px;background:linear-gradient(180deg,var(--card), rgba(255,255,255,0.02));
+      border-radius:18px;padding:36px;box-shadow:0 10px 30px rgba(2,6,23,0.6);backdrop-filter:blur(6px);
+      display:grid;grid-template-columns:220px 1fr;gap:28px;align-items:center;
+    }
+    .illustration{display:flex;align-items:center;justify-content:center}
+    /* simple crane / paused icon made with svg */
+    .title{font-size:24px;font-weight:700;margin:0 0 6px}
+    .subtitle{color:var(--muted);margin:0 0 18px}
+    .reason{background:var(--glass);padding:12px;border-radius:10px;color:var(--muted);font-size:14px}
+    .actions{margin-top:18px;display:flex;gap:12px;flex-wrap:wrap}
+    .btn{background:transparent;border:2px solid rgba(255,255,255,0.06);padding:10px 14px;border-radius:10px;color:inherit;cursor:pointer}
+    .btn.primary{background:linear-gradient(90deg,var(--accent),#ff9a6b);color:#081023;border:none;box-shadow:0 6px 18px rgba(255,184,107,0.12)}
+    .contact{margin-top:14px;font-size:13px;color:var(--muted)}
+    .small{font-size:13px;color:var(--muted)}
+    form{display:flex;gap:8px;margin-top:12px}
+    input[type="email"]{flex:1;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+    input[type="submit"]{padding:10px 14px;border-radius:10px;border:none;background:var(--accent);color:#081023;cursor:pointer}
 
-        /* Floating objects animation */
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-            100% { transform: translateY(0px); }
-        }
-        
-        .floating-circle {
-            position: absolute;
-            background: rgba(255, 182, 193, 0.2); /* Changed to a soft pink for the flower theme */
-            border-radius: 50%;
-            z-index: 10;
-            animation-name: float;
-            animation-duration: 4s;
-            animation-iteration-count: infinite;
-            animation-timing-function: ease-in-out;
-            pointer-events: none;
-        }
+    footer{grid-column:1/-1;margin-top:18px;color:var(--muted);font-size:13px}
 
-        /* Hero section background image and overlay */
-        .hero-background {
-            background-image: url('WhatsApp Image 2025-08-03 at 02.14.06_ba1673aa.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
+    @media (max-width:720px){
+      .card{grid-template-columns:1fr;max-width:680px;padding:22px}
+      .illustration{order:-1}
+    }
 
-        /* Styles for the modals */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 100;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.4);
-            backdrop-filter: blur(5px);
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto;
-            padding: 20px;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-
-        .close-button {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close-button:hover,
-        .close-button:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        
-        /* New custom aspect ratio for images */
-        .aspect-square {
-            aspect-ratio: 1 / 1;
-        }
-        
-        /* Add to cart animation styles */
-        .product-fly-animation {
-            position: fixed;
-            z-index: 150;
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            object-fit: cover;
-            animation: fly-to-cart 0.8s ease-in-out;
-        }
-        
-        @keyframes fly-to-cart {
-            0% {
-                transform: scale(1);
-                opacity: 1;
-            }
-            100% {
-                transform: translate(var(--dx), var(--dy)) scale(0);
-                opacity: 0.5;
-            }
-        }
-    </style>
+    /* small animation for the crane hook to indicate paused */
+    @keyframes bob {0%{transform:translateY(0)}50%{transform:translateY(6px)}100%{transform:translateY(0)}}
+    .hook{animation:bob 1.8s ease-in-out infinite}
+    .paused-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,0.04);font-weight:600}
+    .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 4px 12px rgba(255,184,107,0.18)}
+  </style>
 </head>
-<body class="bg-rose-50 text-gray-800">
-
-    <div id="app" class="relative">
-        <!-- Header/Navigation - changed to bg-black -->
-        <header class="sticky top-0 z-50 bg-black shadow-sm">
-            <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-                <!-- Logo with updated image source -->
-                <a href="#hero" class="text-3xl font-bold tracking-tight text-gray-900">
-                    <img src="download.png" alt="justunwrap Logo" class="h-14">
-                </a>
-                
-                <!-- Desktop Navigation Links -->
-                <ul class="hidden md:flex space-x-8 text-lg">
-                    <li><a href="#hero" class="text-white hover:text-pink-600 transition-colors duration-300">Home</a></li>
-                    <li><a href="#products" class="text-white hover:text-pink-600 transition-colors duration-300">Products</a></li>
-                    <li><a href="#about" class="text-white hover:text-pink-600 transition-colors duration-300">About</a></li>
-                    <li><a href="#contact" class="text-white hover:text-pink-600 transition-colors duration-300">Contact</a></li>
-                </ul>
-
-                <!-- Shopping Cart Icon & Mobile Menu Button with basket count -->
-                <div class="flex items-center space-x-4">
-                    <button id="cart-button" class="relative text-xl text-white hover:text-pink-600 transition-colors duration-300 focus:outline-none">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span id="basket-count" class="absolute -top-2 -right-2 bg-pink-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
-                    </button>
-                    <button id="mobile-menu-button" class="md:hidden text-xl text-white focus:outline-none">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                </div>
-            </nav>
-
-            <!-- Mobile Menu (Hidden by default) -->
-            <div id="mobile-menu" class="hidden md:hidden bg-black shadow-lg py-4">
-                <ul class="flex flex-col items-center space-y-4 text-lg text-white">
-                    <li><a href="#hero" class="block py-2 hover:bg-gray-800 w-full text-center" onclick="toggleMobileMenu()">Home</a></li>
-                    <li><a href="#products" class="block py-2 hover:bg-gray-800 w-full text-center" onclick="toggleMobileMenu()">Products</a></li>
-                    <li><a href="#about" class="block py-2 hover:bg-gray-800 w-full text-center" onclick="toggleMobileMenu()">About</a></li>
-                    <li><a href="#contact" class="block py-2 hover:bg-gray-800 w-full text-center" onclick="toggleMobileMenu()">Contact</a></li>
-                </ul>
-            </div>
-        </header>
-
-        <!-- Hero Section -->
-        <section id="hero" class="hero-background min-h-screen relative flex items-center py-20 animate-fadeIn overflow-hidden">
-            <!-- Semi-transparent overlay for text readability -->
-            <div class="absolute inset-0 bg-black opacity-30 z-0"></div>
-            <!-- Floating circles background -->
-            <div class="absolute inset-0 z-0">
-                <div class="floating-circle w-20 h-20" style="top: 10%; left: 15%; animation-delay: 0s;"></div>
-                <div class="floating-circle w-24 h-24" style="top: 50%; left: 70%; animation-delay: 2s;"></div>
-                <div class="floating-circle w-16 h-16" style="top: 80%; left: 40%; animation-delay: 1s;"></div>
-                <div class="floating-circle w-28 h-28" style="top: 30%; left: 90%; animation-delay: 3s;"></div>
-            </div>
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center relative z-10 text-white">
-                <div class="space-y-6 text-center">
-                    <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
-                        Fresh blooms for every occasion.
-                    </h1>
-                    <p class="text-lg max-w-xl mx-auto">
-                        Discover our exquisite collection of bouquets, where nature's beauty meets artistic arrangement.
-                    </p>
-                    <a href="#products" class="inline-block px-8 py-4 bg-pink-600 text-white font-semibold text-lg rounded-full shadow-lg hover:bg-pink-700 transition-all duration-300">
-                        Shop the Collection
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Featured Products Section -->
-        <section id="products" class="py-20 bg-rose-50 animate-fadeIn">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16">
-                    <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Our Signature Bouquets</h2>
-                    <p class="text-lg text-gray-600 max-w-3xl mx-auto">
-                        Explore our best-selling flower arrangements, meticulously crafted to bring joy to every home.
-                    </p>
-                </div>
-                <!-- Product Categories -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                    <!-- Small Bouquet -->
-                    <div class="product-card bg-white rounded-lg shadow-xl overflow-hidden group hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-2"
-                         data-name="Small Bouquet (7ct)" 
-                         data-price="120.00"
-                         data-image="WhatsApp Image 2025-08-04 at 14.29.54_5c630b1b.jpg"
-                         data-addons='[{"name": "Rhinestones", "price": 10}, {"name": "Butterflies", "price": 20}, {"name": "Personalized Strip", "price": 20}, {"name": "Topper", "price": 30}, {"name": "Crown", "price": 30}, {"name": "Mesh", "price": 50}, {"name": "Dior Wrap", "price": 15}, {"name": "Glitter", "price": 50}]'>
-                        <div class="aspect-square">
-                            <img src="WhatsApp Image 2025-08-04 at 14.29.54_5c630b1b.jpg" alt="Small Bouquet" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
-                        </div>
-                        <div class="p-6 text-center">
-                            <h3 class="text-2xl font-semibold text-gray-900 mb-2">Small Bouquet (7ct)</h3>
-                            <p class="text-gray-500 mb-4">A charming arrangement with 7 flower counts, perfect for a small gesture.</p>
-                            <span class="text-xl font-bold text-gray-900">R120.00</span>
-                            <div class="flex justify-center items-center mt-4">
-                                <button class="customize-btn w-full px-4 py-2 bg-pink-600 text-white font-semibold rounded-full hover:bg-pink-700 transition-colors duration-300">
-                                    Customize & Add
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Medium Bouquet 1 -->
-                    <div class="product-card bg-white rounded-lg shadow-xl overflow-hidden group hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-2"
-                         data-name="Medium Bouquet (14ct)" 
-                         data-price="180.00"
-                         data-image="WhatsApp Image 2025-08-03 at 21.48.26_50702e2b.jpg"
-                         data-addons='[{"name": "Rhinestones", "price": 10}, {"name": "Butterflies", "price": 20}, {"name": "Personalized Strip", "price": 20}, {"name": "Topper", "price": 30}, {"name": "Crown", "price": 30}, {"name": "Mesh", "price": 50}, {"name": "Dior Wrap", "price": 15}, {"name": "Glitter", "price": 50}]'>
-                        <div class="aspect-square">
-                            <img src="WhatsApp Image 2025-08-03 at 21.48.26_50702e2b.jpg" alt="Medium Bouquet" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
-                        </div>
-                        <div class="p-6 text-center">
-                            <h3 class="text-2xl font-semibold text-gray-900 mb-2">Medium Bouquet (14ct)</h3>
-                            <p class="text-gray-500 mb-4">A delightful arrangement with 14 flower counts.</p>
-                            <span class="text-xl font-bold text-gray-900">R180.00</span>
-                            <div class="flex justify-center items-center mt-4">
-                                <button class="customize-btn w-full px-4 py-2 bg-pink-600 text-white font-semibold rounded-full hover:bg-pink-700 transition-colors duration-300">
-                                    Customize & Add
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Medium Bouquet 2 (Sunny Sunflower) -->
-                    <div class="product-card bg-white rounded-lg shadow-xl overflow-hidden group hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-2"
-                         data-name="The Sunny Sunflower (Medium)" 
-                         data-price="180.00"
-                         data-image="WhatsApp Image 2025-08-03 at 21.06.25_dcc443cf.jpg"
-                         data-addons='[{"name": "Rhinestones", "price": 10}, {"name": "Butterflies", "price": 20}, {"name": "Personalized Strip", "price": 20}, {"name": "Topper", "price": 30}, {"name": "Crown", "price": 30}, {"name": "Mesh", "price": 50}, {"name": "Dior Wrap", "price": 15}, {"name": "Glitter", "price": 50}]'>
-                        <div class="aspect-square">
-                            <img src="WhatsApp Image 2025-08-03 at 21.06.25_dcc443cf.jpg" alt="The Sunny Sunflower" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
-                        </div>
-                        <div class="p-6 text-center">
-                            <h3 class="text-2xl font-semibold text-gray-900 mb-2">Medium Bouquet (14ct)</h3>
-                            <p class="text-gray-500 mb-4">A vibrant and cheerful sunflower arrangement. (14ct)</p>
-                            <span class="text-xl font-bold text-gray-900">R180.00</span>
-                            <div class="flex justify-center items-center mt-4">
-                                <button class="customize-btn w-full px-4 py-2 bg-pink-600 text-white font-semibold rounded-full hover:bg-pink-700 transition-colors duration-300">
-                                    Customize & Add
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Large Bouquet (25ct) -->
-                    <div class="product-card bg-white rounded-lg shadow-xl overflow-hidden group hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-2"
-                         data-name="Large Bouquet (25ct)" 
-                         data-price="300.00"
-                         data-image="WhatsApp Image 2025-08-03 at 21.44.56_ca0743d7.jpg"
-                         data-addons='[{"name": "Rhinestones", "price": 10}, {"name": "Butterflies", "price": 20}, {"name": "Personalized Strip", "price": 20}, {"name": "Topper", "price": 30}, {"name": "Crown", "price": 30}, {"name": "Mesh", "price": 50}, {"name": "Dior Wrap", "price": 15}, {"name": "Glitter", "price": 50}]'>
-                        <div class="aspect-square">
-                            <img src="WhatsApp Image 2025-08-03 at 21.44.56_ca0743d7.jpg" alt="Large Bouquet" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
-                        </div>
-                        <div class="p-6 text-center">
-                            <h3 class="text-2xl font-semibold text-gray-900 mb-2">Large Bouquet (25ct)</h3>
-                            <p class="text-gray-500 mb-4">An impressive arrangement with 25 flower counts.</p>
-                            <span class="text-xl font-bold text-gray-900">R300.00</span>
-                            <div class="flex justify-center items-center mt-4">
-                                <button class="customize-btn w-full px-4 py-2 bg-pink-600 text-white font-semibold rounded-full hover:bg-pink-700 transition-colors duration-300">
-                                    Customize & Add
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Extra Large Bouquet (35ct) -->
-                    <div class="product-card bg-white rounded-lg shadow-xl overflow-hidden group hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-2"
-                         data-name="Extra Large Bouquet (35ct)" 
-                         data-price="550.00"
-                         data-image="WhatsApp Image 2025-08-03 at 21.44.40_a7077f85.jpg"
-                         data-addons='[{"name": "Rhinestones", "price": 10}, {"name": "Butterflies", "price": 20}, {"name": "Personalized Strip", "price": 20}, {"name": "Topper", "price": 30}, {"name": "Crown", "price": 30}, {"name": "Mesh", "price": 50}, {"name": "Dior Wrap", "price": 15}, {"name": "Glitter", "price": 50}]'>
-                        <div class="aspect-square">
-                            <img src="WhatsApp Image 2025-08-03 at 21.44.40_a7077f85.jpg" alt="Extra Large Bouquet" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
-                        </div>
-                        <div class="p-6 text-center">
-                            <h3 class="text-2xl font-semibold text-gray-900 mb-2">Extra Large Bouquet (35ct)</h3>
-                            <p class="text-gray-500 mb-4">A grand statement with 35 flower counts.</p>
-                            <span class="text-xl font-bold text-gray-900">R550.00</span>
-                            <div class="flex justify-center items-center mt-4">
-                                <button class="customize-btn w-full px-4 py-2 bg-pink-600 text-white font-semibold rounded-full hover:bg-pink-700 transition-colors duration-300">
-                                    Customize & Add
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Mixed Bouquet (Large) -->
-                    <div class="product-card bg-white rounded-lg shadow-xl overflow-hidden group hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-2"
-                         data-name="Mixed Bouquet (Large)" 
-                         data-price="650.00"
-                         data-image="V-Day-Combos-26-B.jpg"
-                         data-addons='[{"name": "Rhinestones", "price": 10}, {"name": "Butterflies", "price": 20}, {"name": "Personalized Strip", "price": 20}, {"name": "Topper", "price": 30}, {"name": "Crown", "price": 30}, {"name": "Mesh", "price": 50}, {"name": "Dior Wrap", "price": 15}, {"name": "Glitter", "price": 50}]'>
-                        <div class="aspect-square">
-                            <img src="V-Day-Combos-26-B.jpg" alt="Mixed Bouquet" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
-                        </div>
-                        <div class="p-6 text-center">
-                            <h3 class="text-2xl font-semibold text-gray-900 mb-2">Mixed Bouquet (Large)</h3>
-                            <p class="text-gray-500 mb-4">A beautiful variety of seasonal flowers in one large bouquet.</p>
-                            <span class="text-xl font-bold text-gray-900">R650.00</span>
-                            <div class="flex justify-center items-center mt-4">
-                                <button class="customize-btn w-full px-4 py-2 bg-pink-600 text-white font-semibold rounded-full hover:bg-pink-700 transition-colors duration-300">
-                                    Customize & Add
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                     <!-- Kids Bouquet -->
-                    <div class="product-card bg-white rounded-lg shadow-xl overflow-hidden group hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-2"
-                         data-name="Kids Bouquet" 
-                         data-price="120.00"
-                         data-image="turquoise-foliage-child-bouquet-scaled.webp"
-                         data-addons='[{"name": "Rhinestones", "price": 10}, {"name": "Butterflies", "price": 20}, {"name": "Personalized Strip", "price": 20}, {"name": "Topper", "price": 30}, {"name": "Crown", "price": 30}, {"name": "Mesh", "price": 50}, {"name": "Dior Wrap", "price": 15}, {"name": "Glitter", "price": 50}]'>
-                        <div class="aspect-square">
-                            <img src="turquoise-foliage-child-bouquet-scaled.webp" alt="Kids Bouquet" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
-                        </div>
-                        <div class="p-6 text-center">
-                            <h3 class="text-2xl font-semibold text-gray-900 mb-2">Kids Bouquet</h3>
-                            <p class="text-gray-500 mb-4">A fun and colorful bouquet designed for kids.</p>
-                            <span class="text-xl font-bold text-gray-900">R120.00</span>
-                            <div class="flex justify-center items-center mt-4">
-                                <button class="customize-btn w-full px-4 py-2 bg-pink-600 text-white font-semibold rounded-full hover:bg-pink-700 transition-colors duration-300">
-                                    Customize & Add
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- The Romantic Rose (Updated Price and Add-ons) -->
-                    <div class="product-card bg-white rounded-lg shadow-xl overflow-hidden group hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-2"
-                         data-name="The Romantic Rose" 
-                         data-price="180.00"
-                         data-image="WhatsApp Image 2025-08-03 at 02.12.09_d484680b.jpg"
-                         data-addons='[{"name": "Rhinestones", "price": 10}, {"name": "Butterflies", "price": 20}, {"name": "Personalized Strip", "price": 20}, {"name": "Topper", "price": 30}, {"name": "Crown", "price": 30}, {"name": "Mesh", "price": 50}, {"name": "Dior Wrap", "price": 15}, {"name": "Glitter", "price": 50}]'>
-                        <div class="aspect-square">
-                            <img src="WhatsApp Image 2025-08-03 at 02.12.09_d484680b.jpg" alt="The Romantic Rose" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
-                        </div>
-                        <div class="p-6 text-center">
-                            <h3 class="text-2xl font-semibold text-gray-900 mb-2">Medium Bouquet (14ct)</h3>
-                            <p class="text-gray-500 mb-4">A classic bouquet of red roses, available in various sizes.</p>
-                            <span class="text-xl font-bold text-gray-900">From R180.00</span>
-                            <div class="flex justify-center items-center mt-4">
-                                <button class="customize-btn w-full px-4 py-2 bg-pink-600 text-white font-semibold rounded-full hover:bg-pink-700 transition-colors duration-300">
-                                    Customize & Add
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- The Serene Lily (Updated Price and Add-ons) -->
-                    <div class="product-card bg-white rounded-lg shadow-xl overflow-hidden group hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-2"
-                         data-name="The Serene Lily" 
-                         data-price="180.00"
-                         data-image="WhatsApp Image 2025-08-03 at 02.12.39_f4a8cad6.jpg"
-                         data-addons='[{"name": "Rhinestones", "price": 10}, {"name": "Butterflies", "price": 20}, {"name": "Personalized Strip", "price": 20}, {"name": "Topper", "price": 30}, {"name": "Crown", "price": 30}, {"name": "Mesh", "price": 50}, {"name": "Dior Wrap", "price": 15}, {"name": "Glitter", "price": 50}]'>
-                        <div class="aspect-square">
-                            <img src="WhatsApp Image 2025-08-03 at 02.12.39_f4a8cad6.jpg" alt="The Serene Lily" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
-                        </div>
-                        <div class="p-6 text-center">
-                            <h3 class="text-2xl font-semibold text-gray-900 mb-2">Medium Bouquet (14ct)</h3>
-                            <p class="text-gray-500 mb-4">Elegant lilies and foliage for a touch of calm, available in various sizes.</p>
-                            <span class="text-xl font-bold text-gray-900">From R180.00</span>
-                            <div class="flex justify-center items-center mt-4">
-                                <button class="customize-btn w-full px-4 py-2 bg-pink-600 text-white font-semibold rounded-full hover:bg-pink-700 transition-colors duration-300">
-                                    Customize & Add
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-16 text-center text-lg text-red-600 font-semibold">
-                    <p>Please note: 50% deposit required when placing an order (non-refundable).</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- About Us Section -->
-        <section id="about" class="py-20 bg-rose-100 animate-fadeIn">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div class="relative flex justify-center lg:justify-start">
-                    <div class="w-full max-w-md md:max-w-xl rounded-xl shadow-2xl overflow-hidden">
-                        <img src="WhatsApp Image 2025-08-04 at 17.05.03_acad13e2.jpg" alt="A beautiful bouquet in a vase" class="w-full h-full object-cover">
-                    </div>
-                </div>
-                <div class="space-y-6 text-center lg:text-left">
-                    <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Our Story</h2>
-                    <p class="text-lg text-gray-600 max-w-xl mx-auto lg:mx-0">
-                        justunwrap was founded with a love for flowers and a commitment to artful design. We believe a bouquet is more than just a gift; it's a way to express emotions, celebrate moments, and bring the beauty of nature indoors.
-                    </p>
-                    <p class="text-lg text-gray-600 max-w-xl mx-auto lg:mx-0">
-                        Our flowers are sourced from local farms and arranged with care by our skilled florists, ensuring every bouquet is a unique masterpiece.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- CTA Section -->
-        <section class="py-20 bg-gray-900 text-white text-center animate-fadeIn">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 class="text-4xl md:text-5xl font-bold mb-4">Ready to Brighten Someone's Day?</h2>
-                <p class="text-lg max-w-3xl mx-auto mb-8 text-gray-300">
-                    Find the perfect bouquet for any occasion and share the gift of beauty and joy.
-                </p>
-                <a href="#products" class="inline-block px-8 py-4 bg-white text-gray-900 font-semibold text-lg rounded-full shadow-lg hover:bg-gray-200 transition-all duration-300">
-                    Explore Our Full Collection
-                </a>
-            </div>
-        </section>
-
-        <!-- Footer -->
-        <footer id="contact" class="bg-gray-900 text-gray-300 py-12 animate-fadeIn">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <div class="flex justify-center space-x-6 mb-6">
-                    <a href="https://wa.me/27625787177" target="_blank" class="text-xl hover:text-white transition-colors duration-300" aria-label="WhatsApp 1"><i class="fab fa-whatsapp"></i></a>
-                    <a href="https://wa.me/27763750961" target="_blank" class="text-xl hover:text-white transition-colors duration-300" aria-label="WhatsApp 2"><i class="fab fa-whatsapp"></i></a>
-                    <a href="https://www.tiktok.com/@justunwrap?_t=ZM-8yYTuAhFHcL&_r=1" target="_blank" class="text-xl hover:text-white transition-colors duration-300" aria-label="Visit our TikTok page"><i class="fab fa-tiktok"></i></a>
-                    <a href="https://www.instagram.com/just.unwrap?igsh=MXc0NnF0MHh3MGRkYw==" target="_blank" class="text-xl hover:text-white transition-colors duration-300" aria-label="Visit our Instagram page"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="text-xl hover:text-white transition-colors duration-300"><i class="fab fa-pinterest-p"></i></a>
-                    <a href="#" class="text-xl hover:text-white transition-colors duration-300"><i class="fas fa-envelope"></i></a>
-                </div>
-                <p>&copy; 2025 justunwrap. All rights reserved.</p>
-            </div>
-        </footer>
+<body>
+  <main class="card" role="main" aria-labelledby="site-title">
+    <div class="illustration" aria-hidden="true">
+      <!-- simple SVG showing paused construction theme -->
+      <svg width="180" height="180" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Construction paused illustration">
+        <defs>
+          <linearGradient id="g1" x1="0" x2="1">
+            <stop offset="0" stop-color="#ffd8a8" />
+            <stop offset="1" stop-color="#ff9a6b" />
+          </linearGradient>
+        </defs>
+        <rect x="0" y="0" width="200" height="200" rx="18" fill="rgba(255,255,255,0.02)"/>
+        <!-- tower -->
+        <rect x="70" y="28" width="12" height="120" rx="3" fill="#9fb0c8" opacity="0.14"/>
+        <rect x="78" y="28" width="40" height="8" rx="4" fill="#9fb0c8" opacity="0.14" transform="rotate(30 98 32)"/>
+        <!-- crane arm -->
+        <rect x="35" y="38" width="110" height="8" rx="4" fill="#c7d3e0" opacity="0.9"/>
+        <!-- hook -->
+        <g transform="translate(125,40)" class="hook">
+          <rect x="0" y="0" width="4" height="44" rx="2" fill="#c7d3e0"/>
+          <rect x="-12" y="44" width="28" height="12" rx="3" fill="url(#g1)"/>
+          <!-- paused symbol on the load -->
+          <g transform="translate(-6,48)">
+            <rect x="2" y="1" width="4" height="12" rx="1" fill="#081023"/>
+            <rect x="10" y="1" width="4" height="12" rx="1" fill="#081023"/>
+          </g>
+        </g>
+      </svg>
     </div>
 
-    <!-- The Modal for the order summary -->
-    <div id="order-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <h3 class="text-2xl font-bold text-gray-900 mb-4">Your Order</h3>
-            <div id="order-summary-content" class="mb-4"></div>
-            <button id="order-whatsapp-btn" class="w-full px-6 py-3 bg-green-600 text-white font-semibold rounded-full hover:bg-green-700 transition-colors duration-300">
-                Order via WhatsApp
-            </button>
-        </div>
+    <div>
+      <h1 id="site-title" class="title">Construction Paused</h1>
+      <p class="subtitle">We were building something great, but work is paused for now.</p>
+
+      <div class="reason" role="region" aria-label="reason">
+        <strong class="small">Status:</strong> Paused — planning review in progress. We expect to return with updates when decisions are final.
+      </div>
+
+      <div class="actions">
+        <span class="paused-badge" aria-hidden="false"><span class="dot" aria-hidden="true"></span>Paused</span>
+        <button class="btn" onclick="location.reload()" title="Refresh status">Check status</button>
+        <button class="btn primary" onclick="window.location.href='mailto:hello@example.com?subject=Site%20Construction%20Paused'">Contact Us</button>
+      </div>
+
+      <p class="contact">Want us to notify you when construction resumes? Leave your email below and we will get in touch.</p>
+
+      <form onsubmit="event.preventDefault(); subscribe();" aria-label="subscribe form">
+        <input type="email" id="email" placeholder="your email address" required aria-required="true" />
+        <input type="submit" value="Notify me" />
+      </form>
+
+      <p class="small" id="subscribe-msg" aria-live="polite" style="margin-top:10px"></p>
+
+      <footer>
+        <span>Estimated return: <strong>To be decided</strong></span>
+        <span style="float:right">&copy; <span id="year"></span> Your Company</span>
+      </footer>
     </div>
-    
-    <!-- The Modal for Product Details/Add-ons -->
-    <div id="details-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-button close-details-button">&times;</span>
-            <h3 id="details-modal-title" class="text-2xl font-bold text-gray-900 mb-4">Customize Your Bouquet</h3>
-            <div class="mb-4">
-                <img id="details-modal-image" src="" alt="Bouquet Image" class="aspect-square object-cover rounded-lg mb-4 mx-auto">
-                <p class="text-lg font-semibold text-gray-900 mb-2">Add-ons (Optional):</p>
-                <div id="details-modal-addons" class="space-y-2">
-                    <!-- Add-ons will be dynamically inserted here -->
-                </div>
-            </div>
-            <div class="flex flex-col items-center mt-6">
-                <p class="text-xl font-bold text-gray-900 mb-4">Total: <span id="details-modal-total">R0.00</span></p>
-                <button id="modal-add-to-basket-btn" class="w-full px-6 py-3 bg-gray-900 text-white font-semibold rounded-full hover:bg-gray-700 transition-colors duration-300">
-                    Add to Basket
-                </button>
-            </div>
-        </div>
-    </div>
+  </main>
 
-    <script>
-        // Global variables for basket and order modal
-        let basket = [];
-        const whatsappNumbers = ['27625787177', '27763750961']; // SA numbers with country code, no + or 00
-        
-        const cartButton = document.getElementById('cart-button');
-        const basketCount = document.getElementById('basket-count');
-        const orderModal = document.getElementById('order-modal');
-        const orderSummaryContent = document.getElementById('order-summary-content');
-        const orderWhatsappBtn = document.getElementById('order-whatsapp-btn');
-        
-        // Variables for the new details modal
-        const detailsModal = document.getElementById('details-modal');
-        const detailsModalTitle = document.getElementById('details-modal-title');
-        const detailsModalContent = document.getElementById('details-modal-content');
-        const detailsModalImage = document.getElementById('details-modal-image');
-        const detailsModalAddons = document.getElementById('details-modal-addons');
-        const detailsModalTotal = document.getElementById('details-modal-total');
-        const modalAddToBasketBtn = document.getElementById('modal-add-to-basket-btn');
+  <script>
+    // small client-side subscribe simulation
+    function subscribe(){
+      var email = document.getElementById('email').value.trim();
+      var msg = document.getElementById('subscribe-msg');
+      if(!email){ msg.textContent = 'Please enter a valid email.'; return; }
+      // fake API delay
+      msg.textContent = 'Thanks — we will notify you if and when construction resumes.';
+      document.getElementById('email').value = '';
+    }
 
-        // Store current product data for the modal
-        let currentProduct = {};
-
-        // Function to update the basket count in the header
-        function updateBasketCount() {
-            const totalItems = basket.reduce((sum, item) => sum + item.quantity, 0);
-            basketCount.textContent = totalItems;
-        }
-
-        // Function to update the total price in the details modal
-        function updateDetailsModalTotal() {
-            let total = parseFloat(currentProduct.price);
-            const addons = detailsModalAddons.querySelectorAll('input[type="checkbox"]:checked');
-            addons.forEach(addon => {
-                total += parseFloat(addon.value);
-            });
-            detailsModalTotal.textContent = `R${total.toFixed(2)}`;
-        }
-
-        // Function to handle the add-to-cart animation
-        function flyToCartAnimation(productImage, startElement) {
-            const cartRect = cartButton.getBoundingClientRect();
-            const startRect = startElement.getBoundingClientRect();
-
-            const clonedImage = productImage.cloneNode();
-            clonedImage.classList.add('product-fly-animation');
-            clonedImage.style.top = `${startRect.top}px`;
-            clonedImage.style.left = `${startRect.left}px`;
-            document.body.appendChild(clonedImage);
-
-            // Calculate the transform values for the animation
-            const dx = cartRect.left - startRect.left + (cartRect.width / 2) - (startRect.width / 2);
-            const dy = cartRect.top - startRect.top + (cartRect.height / 2) - (startRect.height / 2);
-
-            // Set the CSS custom properties for the animation
-            clonedImage.style.setProperty('--dx', `${dx}px`);
-            clonedImage.style.setProperty('--dy', `${dy}px`);
-            
-            clonedImage.addEventListener('animationend', () => {
-                clonedImage.remove();
-            });
-        }
-
-        // Event listener for all "Customize" buttons
-        document.querySelectorAll('.customize-btn').forEach(button => {
-            button.addEventListener('click', () => {
-                const productCard = button.closest('.product-card');
-                const productName = productCard.getAttribute('data-name');
-                const productPrice = parseFloat(productCard.getAttribute('data-price'));
-                const productImageSrc = productCard.getAttribute('data-image');
-                const addonsData = productCard.getAttribute('data-addons');
-
-                // Set current product data
-                currentProduct = {
-                    name: productName,
-                    price: productPrice,
-                    image: productImageSrc,
-                    addons: JSON.parse(addonsData)
-                };
-                
-                detailsModalTitle.textContent = `${productName}`;
-                detailsModalImage.src = productImageSrc;
-                
-                let addonsHTML = '';
-                if (currentProduct.addons && currentProduct.addons.length > 0) {
-                    addonsHTML = `
-                        <ul class="space-y-3">
-                            ${currentProduct.addons.map(addon => `
-                                <li class="flex items-center justify-between bg-gray-100 p-3 rounded-lg">
-                                    <label class="flex items-center space-x-3 text-gray-700 font-medium">
-                                        <input type="checkbox" class="h-5 w-5 text-pink-600 rounded focus:ring-pink-500" data-addon-name="${addon.name}" value="${addon.price}">
-                                        <span>${addon.name}</span>
-                                    </label>
-                                    <span class="text-sm font-semibold text-gray-600">+R${addon.price}.00</span>
-                                </li>
-                            `).join('')}
-                        </ul>
-                    `;
-                } else {
-                    addonsHTML = '<p class="text-center text-gray-500">No add-ons available for this product.</p>';
-                }
-
-                detailsModalAddons.innerHTML = addonsHTML;
-                
-                // Add event listeners to update total on checkbox change
-                detailsModalAddons.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-                    checkbox.addEventListener('change', updateDetailsModalTotal);
-                });
-                
-                // Initialize the total display
-                updateDetailsModalTotal();
-
-                detailsModal.style.display = 'block';
-            });
-        });
-
-        // Event listener for the "Add to Basket" button inside the modal
-        modalAddToBasketBtn.addEventListener('click', () => {
-            const selectedAddons = [];
-            let addonTotal = 0;
-            detailsModalAddons.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
-                selectedAddons.push({
-                    name: checkbox.getAttribute('data-addon-name'),
-                    price: parseFloat(checkbox.value)
-                });
-                addonTotal += parseFloat(checkbox.value);
-            });
-
-            const newItem = {
-                name: currentProduct.name,
-                price: currentProduct.price + addonTotal,
-                basePrice: currentProduct.price,
-                addons: selectedAddons,
-                quantity: 1
-            };
-            
-            const existingItemIndex = basket.findIndex(item => item.name === newItem.name && JSON.stringify(item.addons) === JSON.stringify(newItem.addons));
-
-            if (existingItemIndex > -1) {
-                basket[existingItemIndex].quantity++;
-            } else {
-                basket.push(newItem);
-            }
-            
-            updateBasketCount();
-
-            // Trigger the fly-to-cart animation
-            const productImage = detailsModalImage;
-            const startElement = modalAddToBasketBtn;
-            flyToCartAnimation(productImage, startElement);
-            
-            closeModal(detailsModal);
-        });
-
-        // Event listener to open the order modal
-        cartButton.addEventListener('click', () => {
-            if (basket.length > 0) {
-                let summaryHTML = '<ul class="list-disc pl-5 space-y-4">';
-                let total = 0;
-                let orderText = "Hello, I would like to place an order for the following items:\n\n";
-
-                basket.forEach(item => {
-                    const itemTotal = item.price * item.quantity;
-                    summaryHTML += `
-                        <li class="p-3 bg-gray-50 rounded-md">
-                            <div class="font-bold text-lg">${item.name} (x${item.quantity})</div>
-                            <div class="text-sm text-gray-600">Base Price: R${item.basePrice.toFixed(2)}</div>
-                    `;
-                    orderText += `${item.name} (x${item.quantity}) - R${itemTotal.toFixed(2)}\n`;
-                    orderText += `Base Price: R${item.basePrice.toFixed(2)}\n`;
-
-                    if (item.addons && item.addons.length > 0) {
-                        summaryHTML += `<ul class="list-disc pl-5 text-sm text-gray-500 mt-1">`;
-                        orderText += `Add-ons:\n`;
-                        item.addons.forEach(addon => {
-                            summaryHTML += `<li>${addon.name}: +R${addon.price.toFixed(2)}</li>`;
-                            orderText += `${addon.name}: +R${addon.price.toFixed(2)}\n`;
-                        });
-                        summaryHTML += `</ul>`;
-                    }
-                    summaryHTML += `<div class="font-bold text-sm text-right mt-2">Item Total: R${itemTotal.toFixed(2)}</div></li>`;
-                    orderText += `Item Total: R${itemTotal.toFixed(2)}\n\n`;
-                    total += itemTotal;
-                });
-
-                summaryHTML += `</ul><div class="mt-6 text-xl font-bold">Total: R${total.toFixed(2)}</div>`;
-                orderSummaryContent.innerHTML = summaryHTML;
-                
-                // Construct the WhatsApp message with order details, cycling through numbers
-                const primaryWhatsappNumber = whatsappNumbers[0]; // Use the first number for automatic order
-                const fullOrderMessage = encodeURIComponent(orderText + `\nTotal: R${total.toFixed(2)}\n\nPlease note: 50% deposit required when placing an order (non-refundable).`);
-                orderWhatsappBtn.setAttribute('data-message', fullOrderMessage);
-                orderWhatsappBtn.setAttribute('data-whatsapp-number', primaryWhatsappNumber);
-                orderWhatsappBtn.style.display = 'block'; // Ensure button is visible if there are items
-                
-                orderModal.style.display = 'block';
-            } else {
-                 // Update the modal to display a message instead of using alert()
-                orderSummaryContent.innerHTML = '<p class="text-center text-red-500">Your basket is empty. Please add some items to place an order.</p>';
-                orderWhatsappBtn.style.display = 'none'; // Hide the WhatsApp button
-                orderModal.style.display = 'block';
-            }
-        });
-
-        // Event listener for the "Order via WhatsApp" button
-        orderWhatsappBtn.addEventListener('click', () => {
-            const message = orderWhatsappBtn.getAttribute('data-message');
-            const number = orderWhatsappBtn.getAttribute('data-whatsapp-number');
-            if (message && number) {
-                window.open(`https://wa.me/${number}?text=${message}`, '_blank');
-                orderModal.style.display = 'none';
-                basket = []; // Clear the basket after placing the order
-                updateBasketCount();
-            }
-        });
-        
-        // General function to close modals
-        function closeModal(modalElement) {
-            modalElement.style.display = 'none';
-        }
-
-        // Event listeners to close the modals
-        document.querySelectorAll('.close-button').forEach(button => {
-            button.addEventListener('click', () => {
-                closeModal(button.closest('.modal'));
-            });
-        });
-        
-        window.addEventListener('click', (event) => {
-            if (event.target === orderModal) {
-                closeModal(orderModal);
-            }
-            if (event.target === detailsModal) {
-                closeModal(detailsModal);
-            }
-        });
-
-
-        // Mobile menu toggle
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-
-        function toggleMobileMenu() {
-            mobileMenu.classList.toggle('hidden');
-        }
-
-        mobileMenuButton.addEventListener('click', toggleMobileMenu);
-
-    </script>
+    // set current year
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
